@@ -49,14 +49,6 @@ export const createAuditSchema = z.object({
   findings: z.array(findingInputSchema).max(500).default([]),
 });
 
-/**
- * PUT /audits/:id body. A PUT may be full or partial:
- *  - Full replace: provide `metadata`, `title`, `findings` — the resource is
- *    replaced wholesale (findings list is authoritative).
- *  - Partial: provide only the fields you want to change; omit the rest.
- * All fields are therefore optional here; "which semantics" is decided by what
- * the caller sends. `status` transitions are validated in the service layer.
- */
 export const updateAuditSchema = z
   .object({
     title: boundedString(1, 200).optional(),

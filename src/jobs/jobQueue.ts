@@ -1,20 +1,5 @@
 import { logger } from '../utils/logger';
 
-/**
- * In-process job queue with retry / exponential-backoff / dead-letter.
- *
- * Deliberately simple for this exercise — the interface is intentionally shaped
- * so it can be replaced by BullMQ + Redis (or AWS SQS) in production without
- * touching the handlers or the sites that call `enqueue()`.
- *
- * Design decisions:
- *  - Generic over payload type T so each job type is fully type-safe.
- *  - Dead-lettered jobs are kept in memory for inspection/replay; in production
- *    this would be a persistent dead-letter queue (SQS DLQ / Redis sorted set).
- *  - The tick loop uses setTimeout (not setInterval) so a slow handler never
- *    causes overlapping executions.
- */
-
 export type JobStatus = 'pending' | 'running' | 'succeeded' | 'failed' | 'dead_lettered';
 
 export interface Job<T> {

@@ -1,19 +1,6 @@
 import { Attachment, ComplianceAudit } from '../domain/types';
 import { AuditRepository, ListOptions, ListResult } from './auditRepository';
 
-/**
- * In-memory document store used for the exercise (no DB setup required).
- *
- * It mimics the MongoDB behaviours the service relies on:
- *  - documents are stored by `_id` (here, `id`),
- *  - a secondary index on `auditKey` enforces uniqueness,
- *  - `replaceWithVersionCheck` is an atomic compare-and-swap mirroring
- *    `findOneAndUpdate({ _id, version })`.
- *
- * All records are deep-cloned on the way in and out so callers can never mutate
- * stored state by reference — the same isolation a real driver gives you across
- * a network boundary. structuredClone keeps that honest.
- */
 export class InMemoryAuditRepository implements AuditRepository {
   private readonly byId = new Map<string, ComplianceAudit>();
   private readonly keyToId = new Map<string, string>(); // auditKey → id (unique index)

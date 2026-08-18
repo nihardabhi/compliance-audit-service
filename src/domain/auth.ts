@@ -1,22 +1,17 @@
 /**
  * Authentication / authorization domain.
  *
- * Two roles as required by the brief:
- *  - `reader`  — may read audits and download attachments.
- *  - `editor`  — everything a reader can do, plus create/update audits and
- *                upload attachments.
- *
- * Roles are carried as a JWT claim and materialized into an AuthUser by the
- * auth middleware. Authorization decisions are centralized in `can()` so the
- * policy lives in one place.
+ * Two roles:
+ *  - `user`  — may read audits and download attachments.
+ *  - `admin` — everything a user can do, plus create/update audits and
+ *              upload attachments.
  */
 export enum Role {
-  Reader = 'reader',
-  Editor = 'editor',
+  User  = 'user',
+  Admin = 'admin',
 }
 
 export interface AuthUser {
-  /** Subject — the stable user id (JWT `sub`). */
   sub: string;
   name: string;
   roles: Role[];
@@ -30,8 +25,8 @@ export type Permission =
   | 'attachment:download';
 
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
-  [Role.Reader]: ['audit:read', 'attachment:download'],
-  [Role.Editor]: [
+  [Role.User]: ['audit:read', 'attachment:download'],
+  [Role.Admin]: [
     'audit:read',
     'audit:create',
     'audit:update',

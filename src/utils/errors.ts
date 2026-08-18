@@ -1,12 +1,3 @@
-/**
- * Application error hierarchy.
- *
- * Every error surfaced to a client maps to a stable machine-readable `code`, an
- * HTTP status, and an optional list of field-level details. The global error
- * handler (src/middleware/errorHandler.ts) is the single place that serializes
- * these into the wire format, guaranteeing a consistent error schema.
- */
-
 export interface FieldError {
   field: string;
   message: string;
