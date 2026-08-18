@@ -7,6 +7,7 @@ dotenv.config();
  * Environment schema. We validate configuration at boot so the service
  * fails fast and loudly on misconfiguration rather than at first request.
  */
+
 const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),

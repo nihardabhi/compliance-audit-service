@@ -37,12 +37,6 @@ export interface AuditRepository {
   /** Look up by the unique business key. Backs duplicate-key enforcement. */
   findByAuditKey(auditKey: string): Promise<ComplianceAudit | null>;
 
-  /**
-   * Atomically replace the document *only if* the stored version matches
-   * `expectedVersion`. Returns the new document on success, or null if the
-   * version did not match (stale write → caller raises VersionConflictError).
-   * The stored `version` is incremented as part of the swap.
-   */
   replaceWithVersionCheck(
     id: string,
     expectedVersion: number,

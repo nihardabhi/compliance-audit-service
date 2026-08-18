@@ -1,16 +1,3 @@
-/**
- * Domain model.
- *
- * The resource is a `ComplianceAudit` — a hospital/clinic accreditation audit
- * conducted against a published standard (e.g. DNV, Joint Commission). This maps
- * directly to MedLaunch's problem space (audits, findings/CAPAs, compliance
- * intelligence) and gives us naturally rich, nested data with meaningful
- * invariants to enforce.
- *
- * An audit owns a nested collection of `Finding`s (deficiencies discovered during
- * the survey). Each finding owns a nested collection of `Comment`s (reviewer
- * discussion). This gives us the "nested child collections" the brief asks for.
- */
 
 /** Severity of an individual finding, ordered from least to most serious. */
 export enum FindingSeverity {

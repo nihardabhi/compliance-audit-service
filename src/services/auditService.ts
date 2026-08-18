@@ -17,16 +17,6 @@ import { computeMetrics } from './metricsService';
 
 type QueryParams = z.infer<typeof getAuditQuerySchema>;
 
-/**
- * Custom business rule — Status Transition Guard:
- *
- * Audits follow a one-way lifecycle: Draft → InReview → Submitted → Closed.
- * A Closed audit is fully immutable — no field, including status, may change.
- * Rolling back from Submitted → InReview is allowed (e.g. reviewer requests
- * changes), but Closed is a terminal state. This prevents accidental mutation
- * of finalized compliance records and preserves the audit trail integrity.
- */
-
 const ALLOWED_TRANSITIONS: Record<AuditStatus, AuditStatus[]> = {
   [AuditStatus.Draft]: [AuditStatus.InReview],
   [AuditStatus.InReview]: [AuditStatus.Submitted, AuditStatus.Draft],

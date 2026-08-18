@@ -5,19 +5,6 @@ import {
   FindingStatus,
 } from '../domain/types';
 
-/**
- * Pure function — derives AuditMetrics from a ComplianceAudit snapshot.
- *
- * Never stored; always recomputed on read. Adding a new metric field means
- * touching only this file and the response formatter — no migration needed.
- *
- * Risk score algorithm (custom business rule):
- *   Each finding contributes: riskWeight × severityMultiplier
- *   Severity multipliers: Critical=4, Major=3, Minor=2, Informational=1
- *   Raw score is clamped and normalised to [0, 100].
- *   Open/in-remediation findings count fully; resolved/waived count at 10%.
- */
-
 const SEVERITY_MULTIPLIER: Record<FindingSeverity, number> = {
   [FindingSeverity.Critical]: 4,
   [FindingSeverity.Major]: 3,

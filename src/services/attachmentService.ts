@@ -20,6 +20,7 @@ import path from 'path';
  * Keeping the allowlist narrow reduces the attack surface for content-type
  * confusion attacks and makes virus-scanning scope predictable.
  */
+
 const ALLOWED_MIME_TYPES = new Set([
   'application/pdf',
   'image/png',

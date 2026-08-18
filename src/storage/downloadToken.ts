@@ -1,20 +1,6 @@
 import crypto from 'crypto';
 import { env } from '../config/env';
 
-/**
- * Signs and verifies short-lived, HMAC-secured download tokens.
- *
- * A token is a base64url-encoded JSON payload plus an HMAC-SHA256 signature.
- * No third-party library needed — Node's built-in `crypto` is sufficient and
- * keeps the dependency surface small.
- *
- * Format (after base64url decode): `<base64url(payload)>.<hex-signature>`
- *
- * Why not JWT here? JWTs are for identity assertions (the auth middleware uses
- * them). These tokens are single-purpose, short-lived, and opaque to clients —
- * a simpler HMAC scheme is easier to reason about and audit.
- */
-
 export interface DownloadTokenPayload {
   auditId: string;
   attachmentId: string;
