@@ -2,6 +2,7 @@ import { env } from './config/env';
 import { registerAuditCreatedJob } from './jobs/auditCreatedJob';
 import { jobQueue } from './jobs/jobQueue';
 import { InMemoryAuditRepository } from './repositories/inMemoryAuditRepository';
+import { MongoAuditRepository } from './repositories/mongoAuditRepository';
 import { AttachmentService } from './services/attachmentService';
 import { AuditService } from './services/auditService';
 import { LocalStorageDriver } from './storage/localStorageDriver';
@@ -10,7 +11,16 @@ import { logger } from './utils/logger';
 import { createApp } from './app';
 
 async function main(): Promise<void> {
-  const repo    = new InMemoryAuditRepository();
+  // If MONGODB_URI is set use MongoDB, otherwise fall back to in-memory.
+  const repo = env.MONGODB_URI
+    ? await MongoAuditRepository.connect(env.MONGODB_URI, env.MONGODB_DB)
+    : new InMemoryAuditRepository();
+
+  logger.info(
+    { driver: env.MONGODB_URI ? 'mongodb' : 'in-memory' },
+    'repository initialised',
+  );
+
   const storage = new LocalStorageDriver();
 
   registerAuditCreatedJob(repo);
@@ -30,7 +40,11 @@ async function main(): Promise<void> {
   const shutdown = (signal: string): void => {
     logger.info({ signal }, 'shutdown signal received — draining');
     jobQueue.stop();
-    server.close(() => {
+    server.close(async () => {
+      if (repo instanceof MongoAuditRepository) {
+        await repo.close();
+        logger.info('MongoDB connection closed');
+      }
       logger.info('HTTP server closed cleanly');
       process.exit(0);
     });
