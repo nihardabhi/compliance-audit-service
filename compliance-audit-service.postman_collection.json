@@ -1,0 +1,295 @@
+{
+  "info": {
+    "_postman_id": "d3db4443-7828-4b9a-b81b-213947b6b63f",
+    "name": "compliance-audit-service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32315690"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logged in",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Create new audit",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{auth_secret_0qby}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"auditKey\": \"FAC-001:2026-Q2\",\n  \"title\": \"Q1 Compliance Audit 2\",\n  \"metadata\": {\n    \"facilityName\": \"General Hospital\",\n    \"facilityId\": \"FAC-002\",\n    \"standard\": \"DNV NIAHO\",\n    \"surveyorName\": \"Dav3 Smith\",\n    \"region\": \"Northeast\",\n    \"tags\": [\"priority\"]\n  },\n  \"findings\": []\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/audits",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v1",
+            "audits"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get audit",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v1/audits/:id",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v1",
+            "audits",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update audit",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/audits/:id",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v1",
+            "audits",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Upload file",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/audits/:id/attachment",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v1",
+            "audits",
+            ":id",
+            "attachment"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get signed token",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v1/audits/:id/attachment/:attachmentId/token\tUser or Admin\n",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v1",
+            "audits",
+            ":id",
+            "attachment",
+            ":attachmentId",
+            "token\tUser or Admin\n"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            },
+            {
+              "key": "attachmentId",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Download file",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v1/audits/a8c8809d-d675-4776-b324-5006811e6920/attachment/e0def0e5-a4f8-42df-bd71-b7ea02d53a4c/download?token=eyJhdWRpdElkIjoiYThjODgwOWQtZDY3NS00Nzc2LWIzMjQtNTAwNjgxMWU2OTIwIiwiYXR0YWNobWVudElkIjoiZTBkZWYwZTUtYTRmOC00MmRmLWJkNzEtYjdlYTAyZDUzYTRjIiwiZXhwIjoxNzg3MTA2MDY4fQ.a7bbeb3987495f7c1eeb46f867556874af81615994cecf3e2ff4732429a2cc9f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "v1",
+            "audits",
+            "a8c8809d-d675-4776-b324-5006811e6920",
+            "attachment",
+            "e0def0e5-a4f8-42df-bd71-b7ea02d53a4c",
+            "download"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "eyJhdWRpdElkIjoiYThjODgwOWQtZDY3NS00Nzc2LWIzMjQtNTAwNjgxMWU2OTIwIiwiYXR0YWNobWVudElkIjoiZTBkZWYwZTUtYTRmOC00MmRmLWJkNzEtYjdlYTAyZDUzYTRjIiwiZXhwIjoxNzg3MTA2MDY4fQ.a7bbeb3987495f7c1eeb46f867556874af81615994cecf3e2ff4732429a2cc9f"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "TOKEN",
+      "secret": true,
+      "source": {}
+    }
+  ]
+}
