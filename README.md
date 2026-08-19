@@ -101,8 +101,8 @@ docker-compose down
 | `STORAGE_DRIVER` | no | `local` | `local` \| `s3` |
 | `STORAGE_LOCAL_DIR` | no | `./uploads` | Local upload directory |
 | `MAX_UPLOAD_BYTES` | no | `10485760` | Max file size (bytes) |
-| `S3_BUCKET` | if `STORAGE_DRIVER=s3` | — | S3 bucket name |
-| `S3_REGION` | no | `us-east-1` | AWS region |
+| `S3_BUCKET` | if `STORAGE_DRIVER=s3` | — | compliance-audit-files |
+| `S3_REGION` | no | `us-east-2` | AWS region |
 | `S3_ENDPOINT` | no | — | Custom endpoint (LocalStack / MinIO) |
 | `MONGODB_URI` | no | — | MongoDB connection string; omit to use in-memory store |
 | `MONGODB_DB` | no | `compliance-audit` | MongoDB database name |
