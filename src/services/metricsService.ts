@@ -100,12 +100,12 @@ export function computeMetrics(audit: ComplianceAudit, now: Date = new Date()): 
   ).length;
 
   let accreditationReadiness: AuditMetrics['accreditationReadiness'];
-  if (riskScore < 30 && openCriticals === 0) {
-    accreditationReadiness = 'ready';
-  } else if (riskScore < 65 && openCriticals <= 2) {
-    accreditationReadiness = 'at_risk';
-  } else {
+  if (openCriticals > 0) {
     accreditationReadiness = 'not_ready';
+  } else if (riskScore < 30) {
+    accreditationReadiness = 'ready';
+  } else {
+    accreditationReadiness = 'at_risk';
   }
 
   // ── Trend ─────────────────────────────────────────────────────────────────

@@ -6,12 +6,13 @@ import { MongoAuditRepository } from './repositories/mongoAuditRepository';
 import { AttachmentService } from './services/attachmentService';
 import { AuditService } from './services/auditService';
 import { LocalStorageDriver } from './storage/localStorageDriver';
+import { S3StorageDriver } from './storage/s3StorageDriver';
 import { systemClock } from './utils/clock';
 import { logger } from './utils/logger';
 import { createApp } from './app';
 
 async function main(): Promise<void> {
-  // If MONGODB_URI is set use MongoDB, otherwise fall back to in-memory.
+  // Repository
   const repo = env.MONGODB_URI
     ? await MongoAuditRepository.connect(env.MONGODB_URI, env.MONGODB_DB)
     : new InMemoryAuditRepository();
@@ -21,7 +22,12 @@ async function main(): Promise<void> {
     'repository initialised',
   );
 
-  const storage = new LocalStorageDriver();
+  // Storage
+  const storage = env.STORAGE_DRIVER === 's3'
+    ? new S3StorageDriver()
+    : new LocalStorageDriver();
+
+  logger.info({ storageDriver: env.STORAGE_DRIVER }, 'storage driver initialised');
 
   registerAuditCreatedJob(repo);
   jobQueue.start();

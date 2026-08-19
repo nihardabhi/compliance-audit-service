@@ -15,9 +15,14 @@ const envSchema = z.object({
   DOWNLOAD_TOKEN_SECRET:      z.string().min(16, 'DOWNLOAD_TOKEN_SECRET must be at least 16 characters'),
   DOWNLOAD_TOKEN_TTL_SECONDS: z.coerce.number().int().positive().default(300),
 
-  STORAGE_DRIVER:    z.enum(['local']).default('local'),
+  STORAGE_DRIVER:    z.enum(['local', 's3']).default('local'),
   STORAGE_LOCAL_DIR: z.string().default('./uploads'),
   MAX_UPLOAD_BYTES:  z.coerce.number().int().positive().default(10 * 1024 * 1024),
+
+  /** S3 storage (required when STORAGE_DRIVER=s3) */
+  S3_BUCKET:   z.string().optional(),
+  S3_REGION:   z.string().default('us-east-1'),
+  S3_ENDPOINT: z.string().url().optional(), // for LocalStack / MinIO
 
   /** Optional — if set, the service uses MongoDB instead of in-memory store. */
   MONGODB_URI: z.string().url().optional(),
@@ -36,7 +41,13 @@ function loadEnv(): AppEnv {
       .join('\n');
     throw new Error(`Invalid environment configuration:\n${issues}`);
   }
-  return parsed.data;
+
+  const data = parsed.data;
+  if (data.STORAGE_DRIVER === 's3' && !data.S3_BUCKET) {
+    throw new Error('S3_BUCKET is required when STORAGE_DRIVER=s3');
+  }
+
+  return data;
 }
 
 export const env: AppEnv = loadEnv();

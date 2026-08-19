@@ -47,7 +47,10 @@ export function verifyDownloadToken(token: string): VerifyResult {
   const expectedSig = sign(encoded);
 
   // Constant-time comparison to prevent timing attacks.
-  if (!crypto.timingSafeEqual(Buffer.from(providedSig, 'hex'), Buffer.from(expectedSig, 'hex'))) {
+  // Buffer.from(..., 'hex') silently drops invalid hex chars, so lengths may differ.
+  const providedBuf = Buffer.from(providedSig, 'hex');
+  const expectedBuf = Buffer.from(expectedSig, 'hex');
+  if (providedBuf.length !== expectedBuf.length || !crypto.timingSafeEqual(providedBuf, expectedBuf)) {
     return { ok: false, reason: 'invalid' };
   }
 
