@@ -109,6 +109,9 @@ export function buildFullResponse(
     ...(includeAll || include.has('attachments')
       ? { attachments: audit.attachments }
       : {}),
+    ...(include.has('changeLog')
+      ? { changeLog: audit.changeLog ?? [] }
+      : {}),
   };
 }
 

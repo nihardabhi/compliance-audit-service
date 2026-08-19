@@ -67,7 +67,7 @@ export type MetadataInput = z.infer<typeof metadataSchema>;
 
 /** ---- Query-parameter parsing for the rich GET endpoint ---- */
 
-export const INCLUDABLE_FIELDS = ['findings', 'comments', 'metrics', 'attachments'] as const;
+export const INCLUDABLE_FIELDS = ['findings', 'comments', 'metrics', 'attachments', 'changeLog'] as const;
 export type IncludableField = (typeof INCLUDABLE_FIELDS)[number];
 
 /**

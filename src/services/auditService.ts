@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { AuthUser } from '../domain/auth';
-import { AuditStatus, ComplianceAudit, Finding } from '../domain/types';
+import { AuditStatus, ChangeLogEntry, ComplianceAudit, Finding } from '../domain/types';
 import { AUDIT_CREATED_JOB } from '../jobs/auditCreatedJob';
 import { JobQueue } from '../jobs/jobQueue';
 import { AuditRepository } from '../repositories/auditRepository';
@@ -83,6 +83,7 @@ export class AuditService {
       },
       findings:    (input.findings ?? []).map((f) => mapFindingInput(f)),
       attachments: [],
+      changeLog:   [],
       version:     1,
       createdBy:   user.sub,
       createdAt:   now,
@@ -119,8 +120,8 @@ export class AuditService {
     id: string,
     input: UpdateAuditInput,
     expectedVersion: number | undefined,
-    _user: AuthUser,      // reserved for future audit-trail logging
-    _requestId: string,   // reserved for future audit-trail logging
+    user: AuthUser,
+    requestId: string,
   ): Promise<ComplianceAudit> {
     const audit = await this.repo.findById(id);
     if (!audit) {
@@ -149,13 +150,37 @@ export class AuditService {
       ? input.findings.map((f) => mapFindingInput(f, existingByCode.get(f.code)))
       : audit.findings;
 
+    // Build a before/after diff of every field that actually changed.
+    const changes: ChangeLogEntry['changes'] = {};
+    if (input.title !== undefined && input.title !== audit.title) {
+      changes['title'] = { before: audit.title, after: input.title };
+    }
+    if (input.status !== undefined && input.status !== audit.status) {
+      changes['status'] = { before: audit.status, after: input.status };
+    }
+    if (input.metadata !== undefined) {
+      changes['metadata'] = {
+        before: audit.metadata,
+        after:  { ...audit.metadata, ...input.metadata },
+      };
+    }
+    if (input.findings !== undefined) {
+      changes['findings'] = {
+        before: `${audit.findings.length} finding(s)`,
+        after:  `${input.findings.length} finding(s)`,
+      };
+    }
+
     const now = this.clock.nowIso();
+    const entry: ChangeLogEntry = { at: now, by: user.sub, requestId, changes };
+
     const next: ComplianceAudit = {
       ...audit,
       title:    input.title    ?? audit.title,
       status:   input.status   ?? audit.status,
       metadata: input.metadata ? { ...audit.metadata, ...input.metadata } : audit.metadata,
       findings: mergedFindings,
+      changeLog: [...(audit.changeLog ?? []), entry],
       updatedAt: now,
     };
 

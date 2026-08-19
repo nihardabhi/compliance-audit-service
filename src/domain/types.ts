@@ -78,6 +78,18 @@ export interface Attachment {
   uploadedAt: string;
 }
 
+/**
+ * One entry written every time the audit is mutated via PUT.
+ * Captures who made the change, when, and a before/after diff of
+ * the fields that actually changed.
+ */
+export interface ChangeLogEntry {
+  at: string;        // ISO-8601 timestamp
+  by: string;        // user.sub of the editor
+  requestId: string; // trace ID for log correlation
+  changes: Record<string, { before: unknown; after: unknown }>;
+}
+
 /** The aggregate root. */
 export interface ComplianceAudit {
   id: string;
@@ -93,6 +105,8 @@ export interface ComplianceAudit {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
+  /** Immutable append-only change history written on every PUT. */
+  changeLog: ChangeLogEntry[];
 }
 
 /**
