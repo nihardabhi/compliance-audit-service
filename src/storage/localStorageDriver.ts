@@ -29,7 +29,7 @@ export class LocalStorageDriver implements StorageDriver {
     fs.mkdirSync(path.resolve(env.STORAGE_LOCAL_DIR), { recursive: true });
   }
 
-  async put(key: string, stream: Readable, _contentType: string): Promise<string> {
+  async put(key: string, stream: Readable, _contentType: string, _sizeBytes?: number): Promise<string> {
     const finalPath = resolveSafePath(key);
     const tmpPath = `${finalPath}.tmp-${crypto.randomBytes(4).toString('hex')}`;
 

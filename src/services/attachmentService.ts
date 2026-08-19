@@ -106,7 +106,7 @@ export class AttachmentService {
 
     // Write to storage backend.
     const stream = Readable.from(file.buffer);
-    await this.storage.put(storageKey, stream, file.mimetype);
+    await this.storage.put(storageKey, stream, file.mimetype, file.size);
 
     const now = this.clock.nowIso();
     const attachment: Attachment = {
